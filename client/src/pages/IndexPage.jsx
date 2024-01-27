@@ -3,7 +3,7 @@ export default function IndexPage() {
         <>
             <div className="mt-20 grow max-w-2xl mx-auto">
                 <h1>Willkommen auf <em>My&nbsp;Finance</em></h1>
-                <p className="bg-secondary p-4 rounded-md my-4">Hier kannst du für jeden deiner Bank-Accounts durchgeführte Transaktionen hinterlegen und <em>My Finance</em> wird dir einen Überblick über deine Ein- und Ausgaben geben.</p>
+                <p className="bg-secondary p-4 rounded-md my-4">Hier kannst du, für jeden deiner Bank-Accounts, durchgeführte Transaktionen hinzufügen und <em>My Finance</em> wird dir einen Überblick über deine Ein- und Ausgaben geben.</p>
                 <div className="bg-secondary p-4 rounded-md my-4 text-center">
                     <p>Gebaut mithilfe von:</p>
                     <ul className="mt-2 flex flex-row justify-evenly">

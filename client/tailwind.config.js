@@ -12,6 +12,7 @@ export default {
         'primary': '#3a31d8',
         'secondary': '#020024',
         'accent': '#0600c2',
+        'negative': '#D83A31'
       },
       fontSize: {
         sm: '0.750rem',

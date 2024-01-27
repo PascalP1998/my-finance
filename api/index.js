@@ -44,21 +44,26 @@ app.post('/login', async (req,res) => {
     const {email, password} = req.body;
     // Suchen des Benutzers in der Datenbank anhand der E-Mail
     const user = await User.findOne({email});
-    if (user) {
-        // Vergleichen des eingegebenen Passworts mit dem gehashten Passwort in der Datenbank
-        const passFound = bcrypt.compareSync(password, user.password);
-        if (passFound) {
-            // Generieren eines JWT-Tokens und Senden als Cookie
-            jwt.sign({email:user.email, id:user._id}, jwtSecret, {}, (err,token) => {
-                if (err) throw err;
-                res.cookie('token', token).json(user);
-            });
+    try {
+        if (user) {
+            // Vergleichen des eingegebenen Passworts mit dem gehashten Passwort in der Datenbank
+            const passFound = bcrypt.compareSync(password, user.password);
+            if (passFound) {
+                // Generieren eines JWT-Tokens und Senden als Cookie
+                jwt.sign({ email: user.email, id: user._id }, jwtSecret, {}, (err, token) => {
+                    if (err) throw err;
+                    res.cookie('token', token).json(user);
+                });
+            } else {
+                res.status(422).json("Password nicht gefunden");
+            }
         } else {
-            res.status(422).json("Password nicht gefunden");
+            res.json("Nicht gefunden");
         }
-    } else {
-        res.json("Nicht gefunden");
+    } catch (error) {
+        res.status(422).json(error);
     }
+    
 })
 
 app.listen(4000);
