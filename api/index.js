@@ -52,7 +52,7 @@ app.post('/login', async (req,res) => {
                 // Generieren eines JWT-Tokens und Senden als Cookie
                 jwt.sign({ email: user.email, id: user._id }, jwtSecret, {}, (err, token) => {
                     if (err) throw err;
-                    res.cookie('token', token).json(user);
+                    res.cookie('token', token, { sameSite: 'None' }).json(user);
                 });
             } else {
                 res.status(422).json("Password nicht gefunden");
