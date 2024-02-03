@@ -25,7 +25,7 @@ export default function Header() {
             <span className="font-bold text-xl">My Finance</span>
             </Link>
             <div className="flex font-bold items-center gap-2">
-                <button className="primary">Dashboard</button>
+                <button className="primary"><Link to={'/dashboard'}>Dashboard</Link></button>
                 <Link to={"/login"} className="hover:text-primary">
                     <ProfileIcon />
                 </Link>

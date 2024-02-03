@@ -66,4 +66,7 @@ app.post('/login', async (req,res) => {
     
 })
 
+// Endpunkt für das Einrichten eines "Budgetblicks"
+
+
 app.listen(4000);
