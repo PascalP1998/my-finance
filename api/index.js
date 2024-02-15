@@ -45,7 +45,7 @@ app.post('/register', async (req,res) => {
 })
 
 // Endpunkt für den Benutzerlogin
-app.post('/login', cookieJwtAuth, async (req,res) => {
+app.post('/login', async (req,res) => {
     const {email, password} = req.body;
     // Suchen des Benutzers in der Datenbank anhand der E-Mail
     const user = await User.findOne({email});
