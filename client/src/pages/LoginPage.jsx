@@ -1,13 +1,15 @@
-import {useContext, useState} from 'react';
+import {useContext} from 'react';
 import { UserContext } from '../UserContext';
 import LoginForm from '../components/LoginForm';
+import axios from 'axios';
 
 export default function LoginPage() {
 
     const { user, setUser } = useContext(UserContext);
 
-    function handleLogout() {
+    async function handleLogout() {
         setUser(null);
+        await axios.get('/logout');
     }
 
     function LogoutButton() {
