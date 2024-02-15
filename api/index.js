@@ -6,9 +6,12 @@ require('dotenv').config();
 const User = require('./models/User');
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
+const BudgetView = require('./models/BudgetView');
+const cookieParser = require('cookie-parser');
+const { cookieJwtAuth } = require('./middleware/cookieAuth');
 
 const bcryptSalt = bcrypt.genSaltSync(10);
-const jwtSecret = 'hduefghuiwfguigfifuigfgfwgbfv';
+const jwtSecret = process.env.JWT_SECRET
 
 // Middleware für das Verarbeiten von JSON-Daten und CORS
 app.use(express.json());
@@ -16,6 +19,8 @@ app.use(cors({
     credentials: true,
     origin: 'http://localhost:5173'
 }));
+
+app.use(cookieParser());
 
 mongoose.connect(process.env.MONGO_URL);
 
@@ -48,12 +53,10 @@ app.post('/login', async (req,res) => {
         if (user) {
             // Vergleichen des eingegebenen Passworts mit dem gehashten Passwort in der Datenbank
             const passFound = bcrypt.compareSync(password, user.password);
-            if (passFound) {
+        if (passFound) {
                 // Generieren eines JWT-Tokens und Senden als Cookie
-                jwt.sign({ email: user.email, id: user._id }, jwtSecret, {}, (err, token) => {
-                    if (err) throw err;
-                    res.cookie('token', token, { sameSite: 'None' }).json(user);
-                });
+                const token = jwt.sign({ email: user.email, id: user._id }, jwtSecret, { expiresIn: "1h"});
+                res.cookie('token', token, { sameSite: 'None', secure: true }).json(user);
             } else {
                 res.status(422).json("Password nicht gefunden");
             }
@@ -67,6 +70,30 @@ app.post('/login', async (req,res) => {
 })
 
 // Endpunkt für das Einrichten eines "Budgetblicks"
+app.post('/newbudgetview', cookieJwtAuth, async (req,res) => {
+    const {user_id, bankname} = req.body;
+    try {
+        // Erstellen eines neuen Budgetblicks
+        const budgetview = await BudgetView.create({
+            user_id,
+            bankname
+        });
+        res.json(budgetview);
+    } catch (error) {
+        res.status(422).json(error);
+    }
+})
+
+// Endpunkt um alle Budgetviews eines Users zu kriegen
+app.post("/getbudgetviews", cookieJwtAuth, async (req,res) => {
+    const {user_id} = req.body;
+    const budgetviews = await BudgetView.find({user_id: user_id}).exec()
+    try {
+        res.json(budgetviews);
+    } catch (error) {
+        res.status(422).json(error);
+    }
+})
 
 
 app.listen(4000);
