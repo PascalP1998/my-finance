@@ -13,11 +13,11 @@ input[type="text"], input[type="password"], input[type="email"] {
 }
 
 button.primary {
-  @apply border bg-primary border-gray-900 p-2 rounded-md hover:bg-text hover:text-background;
+  @apply border bg-primary border-gray-900 p-2 rounded-md hover:bg-text text-background;
 }
 
 button.negative {
-  @apply border bg-negative border-gray-900 p-2 rounded-md hover:bg-text hover:text-background;
+  @apply border bg-negative border-gray-900 p-2 rounded-md hover:bg-text text-background;
 }
 
 h1 {

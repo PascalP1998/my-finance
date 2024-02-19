@@ -70,7 +70,7 @@ app.post('/login', async (req,res) => {
 })
 
 // Endpunkt für das Einrichten eines "Budgetblicks"
-app.post('/newbudgetview', cookieJwtAuth, async (req,res) => {
+app.post('/addbudgetview', cookieJwtAuth, async (req,res) => {
     const {user_id, bankname} = req.body;
     try {
         // Erstellen eines neuen Budgetblicks
@@ -95,5 +95,22 @@ app.post("/getbudgetviews", cookieJwtAuth, async (req,res) => {
     }
 })
 
+app.post("/setusernotnew", cookieJwtAuth, async (req,res) => {
+    const {user_id} = req.body;
+    const userDoc = await User.findById(user_id);
+    try {
+        if (userDoc) {
+            userDoc.isNewUser = false;
+            await userDoc.save();
+        }
+        res.json(userDoc.isNewUser);
+    } catch (error) {
+        res.status(422).json(error);
+    }    
+})
 
-app.listen(4000);
+const PORT = 4000;
+app.listen(PORT, function(err) {
+    if (err) console.log("Error in server setup")
+    console.log("Server listening on Port", PORT);
+})

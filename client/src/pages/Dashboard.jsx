@@ -10,14 +10,27 @@ export default function Dashboard() {
 
     const {user} = useContext(UserContext);
 
-    //const [bankname, setBankname] = useState('');
     const bankname = useRef('');
-    const [isNew, setIsNew] = useState(true);
-    const [budgetviews, setBudgetViews] = useState('');
+
+    const [budgetviews, setBudgetViews] = useState([]);
+
+    useEffect(() => {
+        async function getBudgetviews() {
+            const user_id = user._id;
+            try {
+                const budgetviewsDoc = await axios.post("/getbudgetviews", {user_id});
+                setBudgetViews(budgetviewsDoc.data);
+                    
+            } catch(error) {
+                console.log("Error fetching budgetviews Doc. Maybe the user is not logged in?")
+            }
+        }
+        getBudgetviews();
+    }, [])
 
     function Greetings() {
         if (user) {
-            return <span>Willkommen auf deinem Dashboard, <strong>{user.name}</strong>! </span>
+            return <span>Willkommen auf deinem Dashboard, <strong>{user.name}</strong>!</span>
         } else {
             return (
                 <div className="flex flex-col">
@@ -29,41 +42,21 @@ export default function Dashboard() {
         }
     }
 
-    function CreateBudgetViews() {
-        const budgetViewComponents = [];
-        for (let i = 0; i < budgetviews.length; i++) {
-            console.log(budgetviews[i]);
-            budgetViewComponents.push(<BudgetView bankname={budgetviews[i].bankname} />)
-        }
-        return budgetViewComponents;
-    }
-
-
-    useEffect(() => {
-        async function getBudgetViews() {
-            const user_id = user._id;
-            const budgetviews = await axios.post("/getbudgetviews", {user_id});
-            setBudgetViews(budgetviews.data);
-        }
-        getBudgetViews();
-    }, [])
-
-
     async function newBudgetView(ev) {
         ev.preventDefault();
-        const user_id = user._id;
         const bankname_value = bankname.current.value;
+        const user_id = user._id
         try {
-            await axios.post('/newbudgetview', { user_id, bankname: bankname_value });
-            alert("Budgetblick erfolgreich eingerichtet!");
-            setIsNew(false);
+            await axios.post('/addbudgetview', { user_id, bankname: bankname_value});
+            await axios.post("/setusernotnew", {user_id});
+            alert("Ersten Budgetblick erfolgreich eingerichtet!");
         } catch (error) {
-            alert("Budgetblick konnte nicht eingerichtet werden!");
+            alert("Erster Budgetblick konnte nicht eingerichtet werden!");
         }
     }
 
     function SetupAccountInfo() {
-        if (user && isNew) {
+        if (user && user.isNewUser) {
             return (
                 <>
                     <h2>Richte deinen ersten <strong>Budgetblick</strong> ein!</h2>
@@ -74,7 +67,17 @@ export default function Dashboard() {
                     </form>
                 </>
             )
+        } else {
+            return (<></>)
         }   
+    }
+
+    function CreateBudgetviews() {
+        const budgetviewElements = []
+        for (let i = 0; i < budgetviews.length; i++) {
+            budgetviewElements.push(<BudgetView key={budgetviews[i].bankname} bankname={budgetviews[i].bankname}/>)
+        }
+        return budgetviewElements;
     }
 
     return (
@@ -84,7 +87,7 @@ export default function Dashboard() {
                 <Greetings />
             </div>
             <SetupAccountInfo/>
-            <CreateBudgetViews/>
+            <CreateBudgetviews/>
         </div>
     )
 }
