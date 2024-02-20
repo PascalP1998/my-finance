@@ -14,24 +14,27 @@ export default function Dashboard() {
 
     const [budgetviews, setBudgetViews] = useState([]);
 
-    useEffect(() => {
-        async function getBudgetviews() {
-            const user_id = user._id;
-            try {
-                const budgetviewsDoc = await axios.post("/getbudgetviews", {user_id});
-                setBudgetViews(budgetviewsDoc.data);
-                    
-            } catch(error) {
-                console.log("Error fetching budgetviews Doc. Maybe the user is not logged in?")
-            }
+    const [renderForm, setRenderForm] = useState(false);
+
+    async function getBudgetviews() {
+        const user_id = user._id;
+        try {
+            const budgetviewsDoc = await axios.post("/getbudgetviews", {user_id});
+            setBudgetViews(budgetviewsDoc.data);
+                
+        } catch(error) {
+            console.log("Error fetching budgetviews Doc. Maybe the user is not logged in?")
         }
+    }
+
+    useEffect(() => {
         getBudgetviews();
     }, [])
 
     function Greetings() {
         if (user) {
             return (
-                <div className="bg-secondary p-4 rounded-md my-4 text-center w-1/3">
+                <div className="bg-secondary p-4 rounded-md my-4 text-center w-full md:w-1/3">
                     <span>Willkommen auf deinem Dashboard, <strong>{user.name}</strong>!</span>
                 </div>
             )
@@ -59,6 +62,19 @@ export default function Dashboard() {
         }
     }
 
+    async function addBudgetView(ev) {
+        ev.preventDefault();
+        const bankname_value = bankname.current.value;
+        const user_id = user._id;
+        try {
+            await axios.post('/addbudgetview', { user_id, bankname: bankname_value});
+            getBudgetviews();
+            alert("Budgetblick erfolgreich hinzugefügt!");
+        } catch (error) {
+            alert("Budgetblick konnte nicht hinzugefügt werden!");
+        }
+    }
+
     function SetupAccountInfo() {
         if (user && user.isNewUser) {
             return (
@@ -76,21 +92,62 @@ export default function Dashboard() {
         }   
     }
 
+    function AddAccountInfo() {
+        if (renderForm) {
+            return (
+                <div className="bg-secondary p-4 rounded-md my-4 text-center">
+                    <form className="max-w-md mx-auto text-secondary" onSubmit={addBudgetView}>
+                        <input type="text" ref={bankname} placeholder="Name der Bank oder Kategorie (wie 'Tagesgeldkonto')"/>
+                        <button className="primary w-full my-2 text-text">Budgetblick einrichten</button>
+                    </form>
+                </div>
+            )
+        } else {
+            return null;
+        }
+    }
+
     function CreateBudgetviews() {
         const budgetviewElements = []
         for (let i = 0; i < budgetviews.length; i++) {
             budgetviewElements.push(<BudgetView key={budgetviews[i]._id} budgetview={budgetviews[i]}/>)
         }
         return (
-            <div className="flex flex-row flex-wrap justify-center">
+            <div className="flex flex-col md:flex-row flex-wrap justify-center w-full">
                 {budgetviewElements}
             </div>);
+    }
+
+    async function changeRenderForm() {
+        if (renderForm) {
+            await setRenderForm(false);
+        } else {
+            await setRenderForm (true);
+        }
+    }
+
+    function AddAccountInfoButton() {
+        if (user && !user.isNewUser) {
+            return (
+                <div>
+                    <button className="text-primary hover:text-text flex items-center" onClick={changeRenderForm}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8">
+                            <path fillRule="evenodd" d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875ZM12.75 12a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V18a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V12Z" clipRule="evenodd" />
+                            <path d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z" />
+                        </svg>
+                        <span>Budgetblick hinzufügen</span>
+                    </button>
+                </div>
+            )
+        }
     }
 
     return (
         <div className="mt-20 grow mx-auto flex flex-col items-center">
             <h1>Dashboard</h1>
             <Greetings/>
+            <AddAccountInfoButton/>
+            <AddAccountInfo/>
             <SetupAccountInfo />
             <CreateBudgetviews/>
         </div>

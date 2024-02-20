@@ -10,6 +10,8 @@ export default function BudgetView({budgetview}) {
 
     const {user} = useContext(UserContext);
 
+    const [deletedBudgetViewId, setDeletedBudgetViewId] = useState(null);
+
     async function deleteBankview(ev) {
         ev.preventDefault();
         const proceed = confirm(`Möchtest du ${budgetview.bankname} wirklich löschen?`);
@@ -18,6 +20,7 @@ export default function BudgetView({budgetview}) {
             try {
                 await axios.post("/deletebudgetview", {budgetview_id});
                 alert(`${budgetview.bankname} wurde gelöscht!`);
+                setDeletedBudgetViewId(budgetview_id);
             } catch (error) {
                 alert(`${budgetview.bankname} konnte nicht gelöscht werden!`);
             }
@@ -26,9 +29,12 @@ export default function BudgetView({budgetview}) {
         }
     }
 
+    if (deletedBudgetViewId === budgetview._id) {
+        return null;
+    }
 
     return (
-        <div className="bg-secondary p-4 rounded-md m-4 w-1/3">
+        <div className="bg-secondary p-4 rounded-md m-auto my-2 md:m-4 w-full md:w-1/3">
             <h2>{budgetview.bankname}</h2>
             <button className="text-negative hover:text-text" onClick={deleteBankview}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
