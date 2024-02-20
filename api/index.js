@@ -109,6 +109,16 @@ app.post("/setusernotnew", cookieJwtAuth, async (req,res) => {
     }    
 })
 
+app.post("/deletebudgetview", cookieJwtAuth, async (req,res) => {
+    const {budgetview_id} = req.body;
+    try {
+        await BudgetView.deleteOne({_id: budgetview_id});
+        res.status(200).json("Budgetview deleted");
+    } catch (error) {
+        res.status(422).json(error);
+    }
+})
+
 const PORT = 4000;
 app.listen(PORT, function(err) {
     if (err) console.log("Error in server setup")
