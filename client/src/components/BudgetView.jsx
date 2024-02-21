@@ -28,7 +28,7 @@ export default function BudgetView({budgetview, onDeletion}) {
     }
 
     return (
-        <div className="bg-secondary p-4 rounded-md m-auto my-2 md:m-4 w-full md:w-1/3">
+        <div className="bg-secondary p-4 rounded-md flex flex-col w-full md:w-1/4">
             <h2>{budgetview.bankname}</h2>
             <button className="text-negative hover:text-text" onClick={deleteBankview}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">

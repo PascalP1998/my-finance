@@ -118,7 +118,7 @@ export default function Dashboard() {
             budgetviewElements.push(<BudgetView key={budgetviews[i]._id} budgetview={budgetviews[i]} onDeletion={handleBankviewDeletion}/>)
         }
         return (
-            <div className="flex flex-col md:flex-row flex-wrap justify-center w-full">
+            <div className="flex flex-col md:flex-row w-full md:flex-wrap gap-8 mt-10 md:w-3/4 justify-between">
                 {budgetviewElements}
             </div>);
     }
