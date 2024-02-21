@@ -6,11 +6,9 @@ import { useRef } from "react";
 import axios from 'axios';
 
 // eslint-disable-next-line react/prop-types
-export default function BudgetView({budgetview}) {
+export default function BudgetView({budgetview, onDeletion}) {
 
     const {user} = useContext(UserContext);
-
-    const [deletedBudgetViewId, setDeletedBudgetViewId] = useState(null);
 
     async function deleteBankview(ev) {
         ev.preventDefault();
@@ -20,17 +18,13 @@ export default function BudgetView({budgetview}) {
             try {
                 await axios.post("/deletebudgetview", {budgetview_id});
                 alert(`${budgetview.bankname} wurde gelöscht!`);
-                setDeletedBudgetViewId(budgetview_id);
+                onDeletion();
             } catch (error) {
                 alert(`${budgetview.bankname} konnte nicht gelöscht werden!`);
             }
         } else {
             alert(`${budgetview.bankname} wurde nicht gelöscht!`);
         }
-    }
-
-    if (deletedBudgetViewId === budgetview._id) {
-        return null;
     }
 
     return (

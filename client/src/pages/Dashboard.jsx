@@ -16,6 +16,10 @@ export default function Dashboard() {
 
     const [renderForm, setRenderForm] = useState(false);
 
+    const handleBankviewDeletion = () => {
+        getBudgetviews();
+    };
+
     async function getBudgetviews() {
         const user_id = user._id;
         try {
@@ -40,7 +44,7 @@ export default function Dashboard() {
             )
         } else {
             return (
-                <div className="flex flex-col bg-secondary p-4 rounded-md my-4 text-center w-1/2">
+                <div className="flex flex-col bg-secondary p-4 rounded-md my-4 text-center md:w-1/4 w-1/2">
                     <span>Bitte logge dich erst einmal ein oder registriere dich, wenn du neu auf der Seite bist!</span>
                     <Link to="/login"><button className="w-full primary my-2 text-text">Login</button></Link>
                     <Link to="/register"><button className="w-full primary my-2 text-text">Registrieren</button></Link>
@@ -109,8 +113,9 @@ export default function Dashboard() {
 
     function CreateBudgetviews() {
         const budgetviewElements = []
+        
         for (let i = 0; i < budgetviews.length; i++) {
-            budgetviewElements.push(<BudgetView key={budgetviews[i]._id} budgetview={budgetviews[i]}/>)
+            budgetviewElements.push(<BudgetView key={budgetviews[i]._id} budgetview={budgetviews[i]} onDeletion={handleBankviewDeletion}/>)
         }
         return (
             <div className="flex flex-col md:flex-row flex-wrap justify-center w-full">
@@ -118,19 +123,11 @@ export default function Dashboard() {
             </div>);
     }
 
-    async function changeRenderForm() {
-        if (renderForm) {
-            await setRenderForm(false);
-        } else {
-            await setRenderForm (true);
-        }
-    }
-
     function AddAccountInfoButton() {
         if (user && !user.isNewUser) {
             return (
                 <div>
-                    <button className="text-primary hover:text-text flex items-center" onClick={changeRenderForm}>
+                    <button className="text-primary hover:text-text flex items-center" onClick={() => {if (renderForm) { setRenderForm(false); } else { setRenderForm(true); }}}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8">
                             <path fillRule="evenodd" d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875ZM12.75 12a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V18a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V12Z" clipRule="evenodd" />
                             <path d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z" />
@@ -143,7 +140,7 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="mt-20 grow mx-auto flex flex-col items-center">
+        <div className="mt-20 grow mx-auto flex flex-col items-center w-full">
             <h1>Dashboard</h1>
             <Greetings/>
             <AddAccountInfoButton/>
