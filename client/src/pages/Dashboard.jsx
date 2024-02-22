@@ -8,7 +8,7 @@ import BudgetView from "../components/BudgetView";
 
 export default function Dashboard() {
 
-    const {user} = useContext(UserContext);
+    const {user, setUser} = useContext(UserContext);
 
     const bankname = useRef('');
 
@@ -33,6 +33,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         getBudgetviews();
+        console.log(user.isNewUser);
     }, [])
 
     function Greetings() {
@@ -59,7 +60,9 @@ export default function Dashboard() {
         const user_id = user._id;
         try {
             await axios.post('/addbudgetview', { user_id, bankname: bankname_value});
-            await axios.post("/setusernotnew", {user_id});
+            const userInfo = await axios.post("/setusernotnew", {user_id});
+            setUser(userInfo.data);
+            getBudgetviews();
             alert("Ersten Budgetblick erfolgreich eingerichtet!");
         } catch (error) {
             alert("Erster Budgetblick konnte nicht eingerichtet werden!");
@@ -82,7 +85,7 @@ export default function Dashboard() {
     function SetupAccountInfo() {
         if (user && user.isNewUser) {
             return (
-                <div className="bg-secondary p-4 rounded-md my-4 text-center">
+                <div className="bg-secondary p-4 rounded-md my-4 text-center w-full md:w-1/3">
                     <h2>Richte deinen ersten <strong>Budgetblick</strong> ein!</h2>
                     <span className="info">Info: Mit "Budgetblick" bezeichnen wir die Budget-Übersicht zu einem bestimmten Bankkonto. Keine Sorge, du richtest kein neues Bankkonto ein, immerhin sind wir nur für eine Budgetübersicht hier! :)</span>
                     <form className="mt-10 max-w-md mx-auto text-secondary" onSubmit={newBudgetView}>
@@ -91,8 +94,8 @@ export default function Dashboard() {
                     </form>
                 </div>
             )
-        } else {
-            return (<></>)
+        } else if (user && !user.isNewUser) {
+            return null;
         }   
     }
 
@@ -118,7 +121,7 @@ export default function Dashboard() {
             budgetviewElements.push(<BudgetView key={budgetviews[i]._id} budgetview={budgetviews[i]} onDeletion={handleBankviewDeletion}/>)
         }
         return (
-            <div className="flex flex-col md:flex-row w-full md:flex-wrap gap-8 mt-10 md:w-3/4 justify-between">
+            <div className="flex flex-col md:flex-row w-full md:flex-wrap gap-8 mt-10 md:w-3/4 justify-evenly">
                 {budgetviewElements}
             </div>);
     }
@@ -145,7 +148,7 @@ export default function Dashboard() {
             <Greetings/>
             <AddAccountInfoButton/>
             <AddAccountInfo/>
-            <SetupAccountInfo />
+            <SetupAccountInfo/>
             <CreateBudgetviews/>
         </div>
     )

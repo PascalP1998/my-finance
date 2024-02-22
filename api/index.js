@@ -103,7 +103,7 @@ app.post("/setusernotnew", cookieJwtAuth, async (req,res) => {
             userDoc.isNewUser = false;
             await userDoc.save();
         }
-        res.json(userDoc.isNewUser);
+        res.json(userDoc);
     } catch (error) {
         res.status(422).json(error);
     }    

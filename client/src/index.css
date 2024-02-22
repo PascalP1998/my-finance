@@ -29,5 +29,5 @@ h2 {
 }
 
 span.info {
-  @apply text-slate-500;
+  @apply text-slate-400;
 }

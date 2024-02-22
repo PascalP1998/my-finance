@@ -6,6 +6,7 @@ export const UserContext = createContext({});
 // eslint-disable-next-line react/prop-types
 export function UserContextProvider({children}) {
     const [user, setUser] = useState(null);
+
     // Rendere den Provider mit dem aktuellen Benutzerzustand und der setUser-Funktion
     return (
         <UserContext.Provider value={{user, setUser}}>
