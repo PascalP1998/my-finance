@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 // Definieren des Benutzer-Schemas mit Name, eindeutiger E-Mail und Passwort
 const BudgetViewSchema = new mongoose.Schema({
     user_id: String,
-    bankname: String
+    bankname: String,
+    saldo: Number,
+    rev: Number
 });
 
 // Erstellen des Mongoose-Modells für den Benutzer unter Verwendung des Schemas

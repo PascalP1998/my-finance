@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const BudgetView = require('./models/BudgetView');
 const cookieParser = require('cookie-parser');
 const { cookieJwtAuth } = require('./middleware/cookieAuth');
+const TransactionItem = require('./models/TransactionItem');
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = process.env.JWT_SECRET
@@ -114,6 +115,32 @@ app.post("/deletebudgetview", cookieJwtAuth, async (req,res) => {
     try {
         await BudgetView.deleteOne({_id: budgetview_id});
         res.status(200).json("Budgetview deleted");
+    } catch (error) {
+        res.status(422).json(error);
+    }
+})
+
+app.post('/addtransactionitem', cookieJwtAuth, async (req,res) => {
+    const {bv_id, date, amnt, desc} = req.body;
+    try {
+        // Erstellen eines neuen Budgetblicks
+        const transactionitem = await TransactionItem.create({
+            bv_id,
+            amnt,
+            date,
+            desc
+        });
+        res.json(transactionitem);
+    } catch (error) {
+        res.status(422).json(error);
+    }
+})
+
+app.post("/gettransactionitems", cookieJwtAuth, async (req,res) => {
+    const {bv_id} = req.body;
+    const transactionitems = await TransactionItem.find({bv_id: bv_id}).exec()
+    try {
+        res.json(transactionitems);
     } catch (error) {
         res.status(422).json(error);
     }

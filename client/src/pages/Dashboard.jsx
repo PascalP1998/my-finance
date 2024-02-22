@@ -20,6 +20,8 @@ export default function Dashboard() {
         getBudgetviews();
     };
 
+
+
     async function getBudgetviews() {
         const user_id = user._id;
         try {
@@ -33,7 +35,6 @@ export default function Dashboard() {
 
     useEffect(() => {
         getBudgetviews();
-        console.log(user.isNewUser);
     }, [])
 
     function Greetings() {
