@@ -146,6 +146,16 @@ app.post("/gettransactionitems", cookieJwtAuth, async (req,res) => {
     }
 })
 
+app.post("/deletetransactionitem", cookieJwtAuth, async (req,res) => {
+    const {transactionitem_id} = req.body;
+    try {
+        await TransactionItem.deleteOne({_id: transactionitem_id});
+        res.status(200).json("Transactionitem deleted");
+    } catch (error) {
+        res.status(422).json(error);
+    }
+})
+
 const PORT = 4000;
 app.listen(PORT, function(err) {
     if (err) console.log("Error in server setup")

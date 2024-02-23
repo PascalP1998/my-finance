@@ -90,7 +90,7 @@ export default function Dashboard() {
                     <h2>Richte deinen ersten <strong>Budgetblick</strong> ein!</h2>
                     <span className="info">Info: Mit "Budgetblick" bezeichnen wir die Budget-Übersicht zu einem bestimmten Bankkonto. Keine Sorge, du richtest kein neues Bankkonto ein, immerhin sind wir nur für eine Budgetübersicht hier! :)</span>
                     <form className="mt-10 max-w-md mx-auto text-secondary" onSubmit={newBudgetView}>
-                        <input type="text" ref={bankname} placeholder="Name der Bank oder Kategorie (wie 'Tagesgeldkonto')"/>
+                        <input type="text" ref={bankname} placeholder="Name der Bank oder Kategorie (wie 'Tagesgeldkonto')" required/>
                         <button className="primary w-full my-2 text-text">Budgetblick einrichten</button>
                     </form>
                 </div>
@@ -105,7 +105,7 @@ export default function Dashboard() {
             return (
                 <div className="bg-secondary p-4 rounded-md my-4 text-center">
                     <form className="max-w-md mx-auto text-secondary" onSubmit={addBudgetView}>
-                        <input type="text" ref={bankname} placeholder="Name der Bank oder Kategorie (wie 'Tagesgeldkonto')"/>
+                        <input type="text" ref={bankname} placeholder="Name der Bank oder Kategorie (wie 'Tagesgeldkonto')" required/>
                         <button className="primary w-full my-2 text-text">Budgetblick einrichten</button>
                     </form>
                 </div>
