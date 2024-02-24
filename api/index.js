@@ -18,7 +18,7 @@ const jwtSecret = process.env.JWT_SECRET
 app.use(express.json());
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:5173'
+    origin: 'https://my-finance-web.netlify.app/'
 }));
 
 app.use(function (req, res, next) {
