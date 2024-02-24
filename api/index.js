@@ -16,23 +16,12 @@ const jwtSecret = process.env.JWT_SECRET
 
 // Middleware für das Verarbeiten von JSON-Daten und CORS
 app.use(express.json());
-app.use(cors({
-    credentials: true,
-    origin: 'https://my-finance-web.netlify.app/'
-}));
 
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "https://my-finance-web.netlify.app");
-    res.header(
-        "Access-Control-Allow-Methods",
-        "GET, HEAD, OPTIONS, POST, PUT, DELETE"
-    );
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization, credentials"
-    );
-    next();
-});
+const corsOptions = {
+    origin: 'https://my-finance-web.netlify.app/'
+};
+
+app.use(cors(corsOptions));
 
 app.use(cookieParser());
 
