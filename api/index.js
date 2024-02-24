@@ -12,7 +12,6 @@ const { cookieJwtAuth } = require('./middleware/cookieAuth');
 const TransactionItem = require('./models/TransactionItem');
 
 const bcryptSalt = bcrypt.genSaltSync(10);
-const jwtSecret = process.env.JWT_SECRET
 
 // Middleware für das Verarbeiten von JSON-Daten und CORS
 app.use(express.json());
@@ -58,8 +57,7 @@ app.post('/login', cors(), async (req,res) => {
             const passFound = bcrypt.compareSync(password, user.password);
         if (passFound) {
                 // Generieren eines JWT-Tokens und Senden als Cookie
-                const token = jwt.sign({ email: user.email, id: user._id }, jwtSecret, { expiresIn: "1h"});
-                res.cookie('token', token, { sameSite: 'None', secure: true }).json(user);
+                res.json(user);
             } else {
                 res.status(422).json("Password nicht gefunden");
             }
