@@ -11,6 +11,7 @@ export default function Dashboard() {
     const {user, setUser} = useContext(UserContext);
 
     const bankname = useRef('');
+    const amount = useRef('');
 
     const [budgetviews, setBudgetViews] = useState([]);
 
@@ -59,8 +60,9 @@ export default function Dashboard() {
         ev.preventDefault();
         const bankname_value = bankname.current.value;
         const user_id = user._id;
+        const startSaldo = amount.current.value;
         try {
-            await axios.post('/addbudgetview', { user_id, bankname: bankname_value});
+            await axios.post('/addbudgetview', { user_id, bankname: bankname_value, startSaldo});
             const userInfo = await axios.post("/setusernotnew", {user_id});
             setUser(userInfo.data);
             getBudgetviews();
@@ -74,8 +76,9 @@ export default function Dashboard() {
         ev.preventDefault();
         const bankname_value = bankname.current.value;
         const user_id = user._id;
+        const startSaldo = amount.current.value;
         try {
-            await axios.post('/addbudgetview', { user_id, bankname: bankname_value});
+            await axios.post('/addbudgetview', { user_id, bankname: bankname_value, startSaldo});
             getBudgetviews();
             alert("Budgetblick erfolgreich hinzugefügt!");
         } catch (error) {
@@ -91,6 +94,7 @@ export default function Dashboard() {
                     <span className="info">Info: Mit "Budgetblick" bezeichnen wir die Budget-Übersicht zu einem bestimmten Bankkonto. Keine Sorge, du richtest kein neues Bankkonto ein, immerhin sind wir nur für eine Budgetübersicht hier! :)</span>
                     <form className="mt-10 max-w-md mx-auto text-secondary" onSubmit={newBudgetView}>
                         <input type="text" ref={bankname} placeholder="Name der Bank oder Kategorie (wie 'Tagesgeldkonto')" required/>
+                        <input type="number" ref={amount} placeholder="Startsaldo" step=".01" required/>
                         <button className="primary w-full my-2 text-text">Budgetblick einrichten</button>
                     </form>
                 </div>
@@ -106,6 +110,7 @@ export default function Dashboard() {
                 <div className="bg-secondary p-4 rounded-md my-4 text-center">
                     <form className="max-w-md mx-auto text-secondary" onSubmit={addBudgetView}>
                         <input type="text" ref={bankname} placeholder="Name der Bank oder Kategorie (wie 'Tagesgeldkonto')" required/>
+                        <input type="number" ref={amount} placeholder="Startsaldo" step=".01" required/>
                         <button className="primary w-full my-2 text-text">Budgetblick einrichten</button>
                     </form>
                 </div>

@@ -72,12 +72,13 @@ app.post('/login', async (req,res) => {
 
 // Endpunkt für das Einrichten eines "Budgetblicks"
 app.post('/addbudgetview', cookieJwtAuth, async (req,res) => {
-    const {user_id, bankname} = req.body;
+    const {user_id, bankname, startSaldo} = req.body;
     try {
         // Erstellen eines neuen Budgetblicks
         const budgetview = await BudgetView.create({
             user_id,
-            bankname
+            bankname,
+            startSaldo
         });
         res.json(budgetview);
     } catch (error) {

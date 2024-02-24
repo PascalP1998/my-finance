@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const BudgetViewSchema = new mongoose.Schema({
     user_id: String,
     bankname: String,
+    startSaldo: Number,
     saldo: Number,
     rev: Number
 });

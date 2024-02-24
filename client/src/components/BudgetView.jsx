@@ -20,7 +20,6 @@ export default function BudgetView({budgetview, onDeletion}) {
     };
 
     const handleClick = () => {
-        date.current.reset();
         amount.current.reset();
         desc.current.reset();
     };
@@ -30,7 +29,6 @@ export default function BudgetView({budgetview, onDeletion}) {
         try {
             const transactionItemDoc = await axios.post("/gettransactionitems", {bv_id});
             const transactionItemDocSorted = transactionItemDoc.data.sort((a,b) => new Date(a.date) - new Date(b.date));
-            console.log(transactionItemDocSorted);
             setTransactionItems(transactionItemDocSorted);
                 
         } catch(error) {
@@ -74,7 +72,37 @@ export default function BudgetView({budgetview, onDeletion}) {
     }
 
     function SaldoRevenue() {
-        //...
+
+        const revenue = transactionitems.map(obj => obj.amnt);
+        let sum = 0;
+
+        revenue.forEach(num => {
+            sum += num;
+        })
+
+        const number = (Math.round((budgetview.startSaldo + sum) * 100) / 100).toFixed(2)
+        sum = (Math.round(sum * 100) / 100).toFixed(2)
+
+        let styles = "";
+        if (number < 0) {
+            styles = "px-3 py-1 border border-accent rounded-md bg-zinc-100 text-red-700";
+        } else {
+            styles = "px-3 py-1 border border-accent rounded-md bg-zinc-100 text-neutral-950";
+        }
+
+        let styles_sum = "";
+        if (sum < 0) {
+            styles_sum = "px-3 py-1 border border-accent rounded-md bg-zinc-100 text-red-700";
+        } else {
+            styles_sum = "px-3 py-1 border border-accent rounded-md bg-zinc-100 text-neutral-950";
+        }
+
+        return (
+            <div className="flex justify-between">
+                <div className="p-4 flex flex-col"><span><strong>Saldo</strong></span><span className={styles}><strong>{number}&nbsp;€</strong></span></div>
+                <div className="p-4 flex flex-col"><span><strong>Umsatz</strong></span><span className={styles_sum}><strong>{sum}&nbsp;€</strong></span></div>
+            </div>
+        )
     }
 
     function TransactionItem({transactionitem, onDeletion, index}) {
@@ -137,13 +165,14 @@ export default function BudgetView({budgetview, onDeletion}) {
     */
 
     function CreateTransactionItems() {
+
         const transactionElements = []
         
         for (let i = 0; i < transactionitems.length; i++) {
             transactionElements.push(<TransactionItem key={transactionitems[i]._id} transactionitem={transactionitems[i]} onDeletion={handleTransactionItemDeletion} index={i+1}/>)
         }
         return (
-            <div className="flex flex-col w-full md:flex-wrap md:w-3/4 grow">
+            <div className="flex flex-col w-full md:flex-wrap grow">
                 <table className="table-fixed border border-accent mb-5">
                     <thead>
                         <tr>
