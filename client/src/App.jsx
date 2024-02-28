@@ -10,7 +10,6 @@ import Dashboard from './pages/Dashboard';
 import { useEffect } from 'react';
 
 axios.defaults.baseURL="https://my-finance-qcx8.onrender.com";
-axios.defaults.withCredentials = true;
 
 function App() {
 
