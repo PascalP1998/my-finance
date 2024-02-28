@@ -7,8 +7,6 @@ const User = require('./models/User');
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 const BudgetView = require('./models/BudgetView');
-const cookieParser = require('cookie-parser');
-const { cookieJwtAuth } = require('./middleware/cookieAuth');
 const TransactionItem = require('./models/TransactionItem');
 
 const bcryptSalt = bcrypt.genSaltSync(10);
@@ -22,8 +20,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use(cookieParser());
-
 mongoose.connect(process.env.MONGO_URL);
 
 app.get('/test', (req,res) => {
@@ -31,7 +27,7 @@ app.get('/test', (req,res) => {
 })
 
 // Endpunkt für die Benutzerregistrierung
-app.post('/register', cors(), async (req,res) => {
+app.post('/register', async (req,res) => {
     const {name, email, password} = req.body;
     try {
         // Erstellen eines neuen Benutzers mit gehashtem Passwort
@@ -47,7 +43,7 @@ app.post('/register', cors(), async (req,res) => {
 })
 
 // Endpunkt für den Benutzerlogin
-app.post('/login', cors(), async (req,res) => {
+app.post('/login', async (req,res) => {
     const {email, password} = req.body;
     // Suchen des Benutzers in der Datenbank anhand der E-Mail
     const user = await User.findOne({email});
@@ -71,7 +67,7 @@ app.post('/login', cors(), async (req,res) => {
 })
 
 // Endpunkt für das Einrichten eines "Budgetblicks"
-app.post('/addbudgetview', cors(), cookieJwtAuth, async (req,res) => {
+app.post('/addbudgetview', async (req,res) => {
     const {user_id, bankname, startSaldo} = req.body;
     try {
         // Erstellen eines neuen Budgetblicks
@@ -87,7 +83,7 @@ app.post('/addbudgetview', cors(), cookieJwtAuth, async (req,res) => {
 })
 
 // Endpunkt um alle Budgetviews eines Users zu kriegen
-app.post("/getbudgetviews", cors(), cookieJwtAuth, async (req,res) => {
+app.post("/getbudgetviews", async (req,res) => {
     const {user_id} = req.body;
     const budgetviews = await BudgetView.find({user_id: user_id}).exec()
     try {
@@ -97,7 +93,7 @@ app.post("/getbudgetviews", cors(), cookieJwtAuth, async (req,res) => {
     }
 })
 
-app.post("/setusernotnew", cors(), cookieJwtAuth, async (req,res) => {
+app.post("/setusernotnew", async (req,res) => {
     const {user_id} = req.body;
     const userDoc = await User.findById(user_id);
     try {
@@ -111,7 +107,7 @@ app.post("/setusernotnew", cors(), cookieJwtAuth, async (req,res) => {
     }    
 })
 
-app.post("/deletebudgetview", cors(), cookieJwtAuth, async (req,res) => {
+app.post("/deletebudgetview", async (req,res) => {
     const {budgetview_id} = req.body;
     try {
         await BudgetView.deleteOne({_id: budgetview_id});
@@ -121,7 +117,7 @@ app.post("/deletebudgetview", cors(), cookieJwtAuth, async (req,res) => {
     }
 })
 
-app.post('/addtransactionitem', cors(), cookieJwtAuth, async (req,res) => {
+app.post('/addtransactionitem', async (req,res) => {
     const {bv_id, date, amnt, desc} = req.body;
     try {
         // Erstellen eines neuen Budgetblicks
@@ -137,7 +133,7 @@ app.post('/addtransactionitem', cors(), cookieJwtAuth, async (req,res) => {
     }
 })
 
-app.post("/gettransactionitems", cors(), cookieJwtAuth, async (req,res) => {
+app.post("/gettransactionitems", async (req,res) => {
     const {bv_id} = req.body;
     const transactionitems = await TransactionItem.find({bv_id: bv_id}).exec()
     try {
@@ -147,7 +143,7 @@ app.post("/gettransactionitems", cors(), cookieJwtAuth, async (req,res) => {
     }
 })
 
-app.post("/deletetransactionitem", cors(), cookieJwtAuth, async (req,res) => {
+app.post("/deletetransactionitem", async (req,res) => {
     const {transactionitem_id} = req.body;
     try {
         await TransactionItem.deleteOne({_id: transactionitem_id});
