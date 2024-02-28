@@ -17,7 +17,7 @@ const bcryptSalt = bcrypt.genSaltSync(10);
 app.use(express.json());
 
 const corsOptions = {
-    origin: 'https://my-finance-web.netlify.app/'
+    origin: 'https://my-finance-web.netlify.app'
 };
 
 app.use(cors(corsOptions));
