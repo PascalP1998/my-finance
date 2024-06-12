@@ -194,7 +194,7 @@ export default function BudgetView({budgetview, onDeletion}) {
     function NewTransactionButton() {
         return (
             <form className="max-w-md mx-auto text-secondary flex gap-1" onSubmit={addTransactionItem}>
-                <input type="date" ref={date} min="1970-01-01" className="border my-2 py-2 px-3 rounded-md w-1/4" required/>
+                <input type="date" ref={date} min="1970-01-01" className="border my-2 py-2 px-3 rounded-md w-1/2" required/>
                 <input type="number" ref={amount} placeholder="Betrag" step=".01" required/>
                 <input type="text" ref={desc} placeholder="Beschreibung" required/>
                 <button onClick={handleClick} className="primary w-1/6 my-2 text-text">+</button>
@@ -203,7 +203,7 @@ export default function BudgetView({budgetview, onDeletion}) {
     }
 
     return (
-        <div className="bg-secondary p-4 rounded-md flex flex-col w-full md:w-1/3">
+        <div className="bg-secondary p-4 rounded-md flex flex-col w-full md:w-1/2">
             <h2>{budgetview.bankname}</h2>
             <SaldoRevenue/>
             <CreateTransactionItems/>
